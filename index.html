@@ -1,0 +1,42 @@
+```html
+<!-- ... existing code ... -->
+        /* CSS Art Hero Graphic */
+        .hero-graphic { position: relative; height: 500px; width: 100%; display: flex; align-items: center; justify-content: center; }
+        .hero-shape-main { width: 300px; height: 300px; background: linear-gradient(135deg, var(--primary), #34d399); border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; animation: morph 8s ease-in-out infinite; box-shadow: var(--shadow-float); position: relative; display: flex; align-items: center; justify-content: center; }
+        .hero-shape-main i { font-size: 8rem; color: white; opacity: 0.9; }
+        
+        /* New Hero Photo Box CSS */
+        .hero-photo-box { width: 320px; height: 400px; background: var(--primary-light); border: 8px solid white; border-radius: var(--radius-lg); box-shadow: var(--shadow-float); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 2; overflow: hidden; text-align: center; }
+        .hero-photo-box img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 5; }
+        .hero-photo-box .photo-placeholder { color: var(--primary-dark); font-size: 4rem; z-index: 1; }
+        .hero-photo-box p { font-size: 0.9rem; font-weight: 700; color: var(--primary); margin-top: 15px; z-index: 1; }
+        
+        .hero-orb { position: absolute; background: var(--accent); border-radius: 50%; filter: blur(2px); animation: float 6s ease-in-out infinite; }
+        .orb-1 { width: 80px; height: 80px; top: 10%; right: 10%; animation-delay: 0s; }
+/* ... existing code ... */
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <h2>Biology Beyond the Classroom</h2>
+                    <h1>Experience Science Like Never Before</h1>
+                    <p>Dive into interactive diagrams, premium concept videos, and intelligent MCQ assessments designed specifically for Class 10 Biology excellence.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary nav-trigger" data-target="lessons"><i class="fas fa-microscope"></i> Start Exploring</button>
+                        <button class="btn btn-outline nav-trigger" data-target="mcq">Take a Quiz</button>
+                    </div>
+                </div>
+                <div class="hero-graphic">
+                    <div class="hero-photo-box">
+                        <i class="fas fa-user-tie photo-placeholder"></i>
+                        <p>Insert Photo Here<br>(approx. 320x400)</p>
+                        <!-- UNCOMMENT THE LINE BELOW AND ADD YOUR IMAGE PATH -->
+                        <!-- <img src="images/my-professional-photo.jpg" alt="A. Rambabu"> -->
+                    </div>
+                    <div class="hero-orb orb-1"></div>
+                    <div class="hero-orb orb-2"></div>
+                    <div class="hero-orb orb-3"></div>
+                </div>
+            </div>
+
+            <div class="container" style="margin-top: 60px;">
+<!-- ... existing code ... -->
+```
