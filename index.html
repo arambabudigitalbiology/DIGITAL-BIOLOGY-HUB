@@ -1,299 +1,230 @@
-
 <!DOCTYPE html>
-<html lang="te">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Biology Hub - TS, AP & Inter</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>A. RAMBABU - DIGITAL BIOLOGY HUB</title>
+    <!-- FontAwesome for standard UI icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Telugu:wght@400;600;700&display=swap');
-        
-        body {
-            font-family: 'Inter', 'Noto Sans Telugu', sans-serif;
-            background-color: #f8fafc;
-        }
-
-        .portal-transition {
-            transition: all 0.3s ease-in-out;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #2563eb; }
-
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-            height: 0;
-            overflow: hidden;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-        }
-    </style>
-</head>
-<body class="text-gray-800 antialiased">
-
-    <!-- Navigation Bar -->
-    <nav class="bg-white shadow-md sticky top-0 z-40 border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col sm:flex-row justify-between items-center py-3 sm:h-16 gap-4 sm:gap-0">
-                <div class="flex items-center gap-3">
-                    <div class="bg-blue-100 p-2.5 rounded-lg text-blue-600 shadow-sm">
-                        <i class="fas fa-dna text-2xl"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-xl sm:text-2xl font-bold text-gray-900 leading-tight">Digital BioHub</h1>
-                        <p class="text-xs sm:text-sm text-blue-600 font-semibold tracking-wide">TS, AP & Inter Educational Portal</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Admin Authentication Modal -->
-    <div id="auth-modal" class="fixed inset-0 bg-gray-900 bg-opacity-70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-sm w-full transform transition-all animate-[fadeIn_0.2s_ease-out]">
-            <div class="text-center mb-6">
-                <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-blue-600 text-2xl">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900">Admin Secure Login</h3>
-                <p class="text-sm text-gray-500 mt-2">మీరు మాత్రమే యాక్సెస్ చేయడానికి పాస్‌వర్డ్ ఎంటర్ చేయండి</p>
-            </div>
-            <input type="password" id="admin-password" placeholder="Password ఎంటర్ చేయండి" class="w-full text-center text-lg border-2 border-gray-300 rounded-lg p-3 focus:ring-4 focus:ring-blue-200 focus:border-blue-500 outline-none mb-4 transition-all">
-            <div class="flex gap-3">
-                <button onclick="closeAdminAuth()" class="flex-1 bg-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-300 transition">Cancel</button>
-                <button id="login-btn" onclick="verifyAdminLogin()" class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-md">Login</button>
-            </div>
-            <p id="pwd-error" class="text-red-500 text-sm font-semibold text-center mt-3 hidden">పాస్‌వర్డ్ తప్పు. మళ్లీ ప్రయత్నించండి.</p>
-        </div>
-    </div>
-
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
-        <!-- TEACHER PORTAL (ADMIN) -->
-        <section id="teacher-portal" class="hidden portal-transition">
-            <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-xl shadow-sm border border-blue-200 gap-4">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-900"><i class="fas fa-user-shield text-blue-600 mr-2"></i>Admin Dashboard (Secure)</h2>
-                    <p class="text-gray-600 mt-1">కొత్త ఫోల్డర్లు సృష్టించండి, వీడియోలు/క్విజ్‌లు యాడ్ చేయండి మరియు నిర్వహించండి. (డేటా ఆటోమేటిక్‌గా క్లౌడ్‌లో సేవ్ అవుతుంది)</p>
-                </div>
-                <div class="flex gap-3">
-                    <span id="cloud-status" class="bg-yellow-100 text-yellow-800 px-3 py-2 rounded-lg text-sm font-semibold flex items-center">
-                        <i class="fas fa-sync fa-spin mr-2"></i> కనెక్ట్ అవుతోంది...
-                    </span>
-                    <button onclick="switchPortal('student')" class="bg-red-100 text-red-700 px-4 py-2 rounded-lg font-semibold hover:bg-red-200 transition text-sm">
-                        <i class="fas fa-sign-out-alt mr-1"></i> Logout / Exit
-                    </button>
-                </div>
-            </div>
-
-            <!-- Controls Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                
-                <!-- 1. Create Folder Form -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 lg:col-span-1">
-                    <div class="flex items-center mb-5 border-b pb-3">
-                        <i class="fas fa-folder-plus text-xl text-yellow-500 mr-3"></i>
-                        <h3 class="text-lg font-bold text-gray-800">1. కొత్త ఫోల్డర్ క్రియేట్ చేయండి</h3>
-                    </div>
-                    <form onsubmit="handleCreateFolder(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">ఫోల్డర్ / చాప్టర్ పేరు</label>
-                            <input type="text" id="new-folder-name" required placeholder="ఉదా: TS 10th - పోషణ" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-yellow-500 outline-none">
-                        </div>
-                        <button type="submit" class="w-full bg-yellow-500 text-white font-bold py-2.5 rounded-lg hover:bg-yellow-600 transition shadow-sm">
-                            <i class="fas fa-plus"></i> ఫోల్డర్ సృష్టించు
-                        </button>
-                    </form>
-                </div>
-
-                <!-- 2. Add Video Form -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 lg:col-span-2">
-                    <div class="flex items-center mb-5 border-b pb-3">
-                        <i class="fas fa-video text-xl text-red-500 mr-3"></i>
-                        <h3 class="text-lg font-bold text-gray-800">2. వీడియో & నోట్స్ అప్‌లోడ్ చేయండి</h3>
-                    </div>
-                    <form onsubmit="handleVideoUpload(event)" class="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">ఫోల్డర్ ఎంచుకోండి</label>
-                            <select id="video-folder-select" required class="w-full border border-gray-300 rounded-lg p-2.5 bg-gray-50 outline-none focus:ring-2 focus:ring-red-500"></select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">వీడియో పేరు</label>
-                            <input type="text" id="video-title" required placeholder="టాపిక్ పేరు..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-red-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">YouTube URL</label>
-                            <input type="url" id="video-url" required placeholder="https://www.youtube.com/watch?v=..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-red-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">విద్యా ప్రమాణాలు</label>
-                            <textarea id="video-as" required rows="2" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-red-500"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">అభ్యసన ఫలితాలు</label>
-                            <textarea id="video-lo" required rows="2" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-red-500"></textarea>
-                        </div>
-                        <div class="md:col-span-2">
-                            <button type="submit" class="w-full bg-red-500 text-white font-bold py-3 rounded-lg hover:bg-red-600 transition shadow-sm">
-                                <i class="fas fa-cloud-upload-alt"></i> వీడియో అప్‌లోడ్ చేయండి
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- 3. Add Quiz Form -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <div class="flex items-center mb-5 border-b pb-3">
-                        <i class="fas fa-question-circle text-xl text-purple-500 mr-3"></i>
-                        <h3 class="text-lg font-bold text-gray-800">3. ఇంటరాక్టివ్ క్విజ్ ప్రశ్నలు</h3>
-                    </div>
-                    <form onsubmit="handleQuizUpload(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">ఫోల్డర్ ఎంచుకోండి</label>
-                            <select id="quiz-folder-select" required class="w-full border border-gray-300 rounded-lg p-2.5 bg-gray-50 outline-none focus:ring-2 focus:ring-purple-500"></select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">ప్రశ్న</label>
-                            <textarea id="quiz-question" required rows="2" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-purple-500"></textarea>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <input type="text" id="quiz-opt0" required placeholder="Option 1" class="border border-gray-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-purple-500">
-                            <input type="text" id="quiz-opt1" required placeholder="Option 2" class="border border-gray-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-purple-500">
-                            <input type="text" id="quiz-opt2" required placeholder="Option 3" class="border border-gray-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-purple-500">
-                            <input type="text" id="quiz-opt3" required placeholder="Option 4" class="border border-gray-300 rounded-lg p-2 outline-none focus:ring-2 focus:ring-purple-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">సరైన సమాధానం</label>
-                            <select id="quiz-answer" required class="w-full border border-gray-300 rounded-lg p-2.5 bg-green-50 text-green-800 font-bold outline-none focus:ring-2 focus:ring-green-500">
-                                <option value="0">Option 1 (మొదటిది)</option>
-                                <option value="1">Option 2 (రెండవది)</option>
-                                <option value="2">Option 3 (మూడవది)</option>
-                                <option value="3">Option 4 (నాల్గవది)</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="w-full bg-purple-600 text-white font-bold py-2.5 rounded-lg hover:bg-purple-700 transition shadow-sm">
-                            <i class="fas fa-plus-circle"></i> ప్రశ్నను సేవ్ చేయండి
-                        </button>
-                    </form>
-                </div>
-
-                <!-- 4. Manage Content (Delete) -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-red-200 flex flex-col h-[500px]">
-                    <div class="flex items-center justify-between mb-5 border-b pb-3 border-red-100">
-                        <div class="flex items-center">
-                            <i class="fas fa-trash-alt text-xl text-red-500 mr-3"></i>
-                            <h3 class="text-lg font-bold text-gray-800">4. కంటెంట్ మేనేజ్‌మెంట్ (డిలీట్)</h3>
-                        </div>
-                    </div>
-                    
-                    <div class="flex-grow overflow-y-auto pr-2 space-y-4" id="manage-content-list">
-                        <!-- Populated dynamically -->
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- STUDENT PORTAL -->
-        <section id="student-portal" class="portal-transition">
+        /* =========================================================
+           PREMIUM DESIGN SYSTEM & VARIABLES
+        ========================================================= */
+        :root {
+            --primary: #0f766e;       
+            --primary-dark: #115e59;  
+            --primary-light: #ccfbf1; 
             
-            <!-- Folder Selection View -->
-            <div id="student-home-view">
-                <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl p-8 sm:p-12 mb-10 text-center shadow-2xl relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-                        <i class="fas fa-dna absolute top-10 left-10 text-6xl transform -rotate-45"></i>
-                        <i class="fas fa-microscope absolute bottom-4 right-10 text-7xl transform rotate-12"></i>
-                        <i class="fas fa-leaf absolute top-1/2 left-1/4 text-5xl"></i>
-                    </div>
-                    
-                    <div class="relative z-10 flex flex-col items-center">
-                        <div class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white shadow-xl mb-5 overflow-hidden bg-white flex items-center justify-center transform hover:scale-105 transition-transform duration-300">
-                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Teacher&backgroundColor=b6e3f4" alt="Teacher Profile" class="w-full h-full object-cover">
-                        </div>
-                        
-                        <h2 class="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight drop-shadow-md">Digital Biology Hub</h2>
-                        <div class="inline-block bg-white/20 backdrop-blur-md rounded-full px-6 py-2 mb-4 border border-white/30">
-                            <p class="text-white font-bold text-sm md:text-base"><i class="fas fa-chalkboard-teacher mr-2"></i>Welcome to Interactive Learning</p>
-                        </div>
-                        <p class="text-indigo-100 max-w-2xl mx-auto text-sm md:text-lg font-medium leading-relaxed">
-                            కింద ఇవ్వబడిన జాబితా నుండి మీ బోర్డు/తరగతి మరియు సబ్జెక్టును ఎంచుకుని ఆసక్తికరమైన వీడియో పాఠాలు మరియు ఇంటరాక్టివ్ క్విజ్‌లు నేర్చుకోండి.
-                        </p>
-                    </div>
-                </div>
+            --accent: #d97706;        
+            --accent-hover: #b45309;  
+            --accent-light: #fef3c7;  
+            
+            --bg-body: #f8fafc;       
+            --bg-card: #ffffff;
+            
+            --text-main: #334155;     
+            --text-heading: #0f172a;  
+            --text-muted: #64748b;    
+            
+            --success: #059669;
+            --success-light: #d1fae5;
+            --danger: #e11d48;
+            --danger-light: #ffe4e6;
+            
+            --border: #e2e8f0;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            
+            --shadow-sm: 0 2px 4px rgba(15, 118, 110, 0.05);
+            --shadow-md: 0 10px 25px -5px rgba(15, 118, 110, 0.1), 0 8px 10px -6px rgba(15, 118, 110, 0.1);
+            --shadow-float: 0 20px 30px -10px rgba(15, 118, 110, 0.15);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-                <div class="flex justify-center mb-6">
-                     <span id="student-cloud-status" class="bg-gray-100 text-gray-600 px-4 py-2 rounded-full text-sm font-medium flex items-center">
-                        <i class="fas fa-sync fa-spin mr-2 text-blue-500"></i> లైవ్ కంటెంట్ లోడ్ అవుతోంది...
-                    </span>
-                </div>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="student-folders-grid">
-                    <!-- Folders Populated by JS -->
-                </div>
-            </div>
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
 
-            <!-- Inside Folder View -->
-            <div id="student-folder-content" class="hidden">
-                <button onclick="backToFolders()" class="mb-6 flex items-center text-blue-600 font-bold hover:text-blue-800 transition">
-                    <i class="fas fa-arrow-left mr-2"></i> వెనక్కి వెళ్ళండి (Back to Folders)
-                </button>
+        /* --- Utilities --- */
+        .container { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        
+        .section-header { text-align: center; margin-bottom: 3.5rem; }
+        .section-header h2 { font-size: 2.5rem; color: var(--text-heading); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem; }
+        .section-header .divider { height: 4px; width: 60px; background: var(--accent); margin: 0 auto; border-radius: 2px; }
 
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8 flex flex-col md:flex-row justify-between items-center gap-4 border-l-4 border-l-blue-500">
-                    <div>
-                        <h3 id="current-folder-title" class="text-2xl font-bold text-gray-900">Folder Title</h3>
-                        <p class="text-sm text-gray-500 mt-1">Study materials and assessments</p>
-                    </div>
-                    <button onclick="startQuizForCurrentFolder()" class="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:from-purple-600 hover:to-indigo-700 transition shadow-lg flex items-center gap-2 w-full md:w-auto justify-center transform hover:-translate-y-0.5">
-                        <i class="fas fa-brain text-xl"></i> క్విజ్ ప్రారంభించండి (Take Quiz)
-                    </button>
-                </div>
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 28px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition); text-decoration: none; }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 6px -1px rgba(15, 118, 110, 0.2); }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(15, 118, 110, 0.3); }
+        .btn-accent { background: var(--accent); color: white; box-shadow: 0 4px 6px -1px rgba(217, 119, 6, 0.2); }
+        .btn-accent:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(217, 119, 6, 0.3); }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
 
-                <div id="student-videos-container" class="space-y-8">
-                    <!-- Populated by JS -->
-                </div>
-                
-                <div id="no-content-msg" class="hidden text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">
-                    <div class="bg-gray-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-folder-open text-4xl text-gray-300"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-700 mb-2">కంటెంట్ అందుబాటులో లేదు</h4>
-                    <p class="text-gray-500 max-w-md mx-auto">ఈ ఫోల్డర్‌లో ఇంకా ఎలాంటి వీడియోలు అప్‌లోడ్ చేయబడలేదు.</p>
-                </div>
-            </div>
+        .grid { display: grid; gap: 30px; }
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .grid-4 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 
-            <!-- Quiz Modal -->
-            <div id="quiz-modal" class="fixed inset-0 bg-gray-900 bg-opacity-80 z-[60] hidden flex items-center justify-center p-4 backdrop-blur-md">
-                <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-[fadeIn_0.3s_ease-out]">
-                    <div class="bg-indigo-600 text-white px-6 py-4 flex justify-between items-center shadow-md z-10">
-                        <div class="flex items-center gap-3">
-                            <i class="fas fa-star text-yellow-300 text-xl"></i>
-                            <h3 class="text-xl font-bold" id="quiz-modal-title">Interactive Quiz</h3>
-                        </div>
-                        <button onclick="closeQuiz()" class="text-white hover:text-indigo-200 transition bg-indigo-700 p-1.5 rounded-full w-9 h-9 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="p-0 overflow-y-auto flex-grow bg-gray-50" id="quiz-modal-body">
-                        <!-- Quiz content -->
-                    </div>
-                </div>
-            </div>
+        .glass-panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(226, 232, 240, 0.8); }
 
-        </section>
-    </main>
+        /* --- Navigation --- */
+        .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; transition: var(--transition); }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; height: 80px; }
+        .logo { display: flex; flex-direction: column; }
+        .logo h1 { font-size: 1.4rem; color: var(--text-heading); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; }
+        .logo h1 span { color: var(--primary); }
+        .logo p { font-size: 0.75rem; color: var(--accent); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
 
-    <!-- Hidden Footer Lock for Admin Access -->
-    <footer class="text-center py-8 text-gray-400 text-sm mt-4">
-        <p>&copy; 2026 Digital Biology Hub. All Rights Reserved. 
-            <button onclick="openAdminAuth()" class="text-gray-200 hover:text-gray-500 ml-3 focus:outline-none transition-colors" title="Admin Access">
-                <i class="fas fa-lock text-xs"></i>
-       
+        .nav-links { list-style: none; display: flex; gap: 4px; }
+        .nav-links li a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.9rem; padding: 8px 12px; border-radius: 6px; transition: var(--transition); cursor: pointer; }
+        .nav-links li a:hover, .nav-links li a.active { color: var(--primary); background: var(--primary-light); }
+        .menu-toggle { display: none; font-size: 1.5rem; color: var(--text-heading); cursor: pointer; padding: 10px; }
+
+        /* --- SPA Section Management --- */
+        .page-section { display: none; padding: 120px 0 80px; min-height: 100vh; opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.4s ease; }
+        .page-section.active { display: block; opacity: 1; transform: translateY(0); }
+
+        /* --- Hero Section --- */
+        .hero-container { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; min-height: calc(100vh - 120px); }
+        .hero-content h2 { font-size: 1.1rem; color: var(--accent); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
+        .hero-content h1 { font-size: 4rem; color: var(--text-heading); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -0.03em; }
+        .hero-content p { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 2.5rem; max-width: 90%; }
+        .hero-buttons { display: flex; gap: 16px; }
+
+        .hero-graphic { position: relative; height: 500px; width: 100%; display: flex; align-items: center; justify-content: center; }
+        
+        .hero-photo-box { width: 320px; height: 400px; background: var(--primary-light); border: 8px solid white; border-radius: var(--radius-lg); box-shadow: var(--shadow-float); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 2; overflow: hidden; text-align: center; }
+        .hero-photo-box img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 5; }
+        .hero-photo-box .photo-placeholder { color: var(--primary-dark); font-size: 4rem; z-index: 1; margin-bottom: 15px; }
+        .hero-photo-box p { font-size: 0.9rem; font-weight: 700; color: var(--primary); z-index: 1; }
+        
+        .hero-orb { position: absolute; background: var(--accent); border-radius: 50%; filter: blur(2px); animation: float 6s ease-in-out infinite; }
+        .orb-1 { width: 80px; height: 80px; top: 10%; right: 10%; animation-delay: 0s; }
+        .orb-2 { width: 50px; height: 50px; bottom: 20%; left: 15%; animation-delay: -2s; background: var(--primary-light); }
+        .orb-3 { width: 30px; height: 30px; top: 40%; left: -5%; animation-delay: -4s; background: #34d399; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        /* --- Cards --- */
+        .feature-card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 40px 30px; text-align: left; box-shadow: var(--shadow-md); border: 1px solid var(--border); cursor: pointer; transition: var(--transition); position: relative; overflow: hidden; }
+        .feature-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--primary); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
+        .feature-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-float); border-color: transparent; }
+        .feature-card:hover::before { transform: scaleX(1); }
+        .feature-icon-wrapper { width: 60px; height: 60px; border-radius: 12px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; transition: var(--transition); }
+        .feature-card:hover .feature-icon-wrapper { background: var(--primary); }
+        .feature-icon-wrapper i { font-size: 1.8rem; color: var(--primary); transition: var(--transition); }
+        .feature-card:hover .feature-icon-wrapper i { color: white; }
+        .feature-card h3 { color: var(--text-heading); font-size: 1.25rem; margin-bottom: 8px; font-weight: 700; }
+        .feature-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+        .content-card { background: var(--bg-card); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: var(--transition); display: flex; flex-direction: column; }
+        .content-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+        .content-media { height: 200px; background: #e2e8f0; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .content-media video, .content-media img { width: 100%; height: 100%; object-fit: cover; }
+        .content-media .badge { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.7); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; backdrop-filter: blur(4px); }
+        .content-info { padding: 24px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .content-info h4 { color: var(--text-heading); font-size: 1.1rem; margin-bottom: 8px; font-weight: 700; }
+        .content-info p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5; }
+        
+        /* --- Interactive Lesson Sub-System --- */
+        .lesson-viewer { background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); overflow: hidden; }
+        .lesson-header-area { padding: 40px; border-bottom: 1px solid var(--border); background: var(--bg-body); }
+        .lesson-header-area h2 { font-size: 2rem; color: var(--text-heading); margin-bottom: 12px; }
+        .obj-box { display: inline-flex; align-items: center; gap: 8px; background: var(--primary-light); color: var(--primary-dark); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; margin-bottom: 20px; }
+        
+        .diagram-workspace { display: grid; grid-template-columns: 1fr 350px; min-height: 500px; background: #0f172a; }
+        .diagram-visual { position: relative; padding: 40px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .css-cell { width: 320px; height: 320px; background: rgba(52, 211, 153, 0.1); border: 4px solid #34d399; border-radius: 30px; position: relative; transition: all 0.5s ease; box-shadow: inset 0 0 40px rgba(52, 211, 153, 0.2); }
+        .organelle { position: absolute; cursor: pointer; transition: var(--transition); }
+        .org-nucleus { width: 80px; height: 80px; background: #818cf8; border-radius: 50%; top: 40px; left: 40px; box-shadow: 0 0 15px rgba(129, 140, 248, 0.5); display: flex; align-items: center; justify-content: center; }
+        .org-nucleus::after { content:''; width: 30px; height: 30px; background: #4f46e5; border-radius: 50%; }
+        .org-vacuole { width: 140px; height: 180px; background: rgba(56, 189, 248, 0.3); border: 2px solid #38bdf8; border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; bottom: 30px; right: 30px; }
+        .org-mito { width: 60px; height: 30px; background: #fb923c; border-radius: 15px; bottom: 60px; left: 40px; transform: rotate(-30deg); display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; }
+        .org-mito::before, .org-mito::after { content:''; width: 80%; height: 2px; background: #c2410c; }
+        .org-chloro { width: 50px; height: 30px; background: #22c55e; border-radius: 15px; top: 60px; right: 40px; transform: rotate(15deg); display: flex; gap: 4px; align-items: center; justify-content: center; }
+        .org-chloro span { width: 8px; height: 8px; background: #14532d; border-radius: 50%; }
+        .organelle:hover, .organelle.active { transform: scale(1.1) !important; filter: brightness(1.2); box-shadow: 0 0 20px rgba(255,255,255,0.5); z-index: 10; }
+
+        .hotspot-label { position: absolute; background: rgba(255,255,255,0.9); color: #0f172a; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; pointer-events: none; opacity: 0; transition: 0.3s; white-space: nowrap; top: -25px; left: 50%; transform: translateX(-50%); }
+        .organelle:hover .hotspot-label, .organelle.active .hotspot-label { opacity: 1; top: -35px; }
+
+        .diagram-panel { background: white; padding: 40px; border-left: 1px solid var(--border); display: flex; flex-direction: column; }
+        .panel-placeholder { text-align: center; color: var(--text-muted); margin-top: 50px; }
+        .panel-placeholder i { font-size: 3rem; color: var(--border); margin-bottom: 16px; }
+        .info-content { display: none; animation: fadeIn 0.4s ease; }
+        .info-content.active { display: block; }
+        .info-content h3 { font-size: 1.5rem; color: var(--text-heading); margin-bottom: 8px; }
+        .info-tag { display: inline-block; padding: 4px 12px; background: var(--primary-light); color: var(--primary-dark); border-radius: 12px; font-size: 0.8rem; font-weight: 600; margin-bottom: 20px; }
+        .info-content p { color: var(--text-main); line-height: 1.6; }
+        
+        .cell-toggle { display: flex; gap: 10px; position: absolute; top: 20px; left: 20px; z-index: 10; }
+        .cell-toggle button { padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+        .cell-toggle button.active { background: var(--primary); border-color: var(--primary); }
+
+        /* --- Advanced MCQ Zone --- */
+        .quiz-wrapper { max-width: 800px; margin: 0 auto; background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); overflow: hidden; position: relative; }
+        .quiz-setup-area { padding: 60px 40px; text-align: center; }
+        .custom-select { width: 100%; max-width: 400px; padding: 14px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; color: var(--text-heading); font-weight: 600; margin: 24px auto; display: block; outline: none; transition: border-color 0.3s; }
+        .custom-select:focus { border-color: var(--primary); }
+        .quiz-active-area { display: none; }
+        
+        .progress-container { width: 100%; height: 6px; background: var(--border); }
+        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.4s ease; }
+        .quiz-header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--bg-body); }
+        .q-count { font-weight: 700; color: var(--text-muted); font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; }
+        .q-score { font-weight: 800; color: var(--primary); background: var(--primary-light); padding: 4px 12px; border-radius: 20px; }
+        
+        .quiz-body { padding: 40px; }
+        .question-text { font-size: 1.3rem; color: var(--text-heading); font-weight: 700; margin-bottom: 30px; line-height: 1.4; }
+        .options-list { display: flex; flex-direction: column; gap: 16px; }
+        .option-btn { padding: 16px 20px; background: var(--bg-body); border: 2px solid var(--border); border-radius: 12px; text-align: left; font-size: 1rem; font-weight: 600; color: var(--text-main); cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-light); transform: scale(1.01); }
+        .option-btn.correct { background: var(--success-light); border-color: var(--success); color: var(--success); }
+        .option-btn.incorrect { background: var(--danger-light); border-color: var(--danger); color: var(--danger); }
+        .option-btn:disabled { cursor: default; }
+
+        .quiz-footer { padding: 20px 40px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; min-height: 90px; }
+        .feedback-toast { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; opacity: 0; transform: translateX(-20px); transition: 0.3s; }
+        .feedback-toast.show { opacity: 1; transform: translateX(0); }
+        .feedback-toast.correct { color: var(--success); }
+        .feedback-toast.incorrect { color: var(--danger); }
+        
+        .quiz-result-area { display: none; padding: 60px 40px; text-align: center; }
+        .circular-chart { position: relative; width: 180px; height: 180px; border-radius: 50%; background: conic-gradient(var(--primary) calc(var(--percentage) * 1%), var(--bg-body) 0); margin: 0 auto 30px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 20px rgba(0,0,0,0.05), var(--shadow-md); }
+        .circular-chart::before { content: ''; position: absolute; width: 150px; height: 150px; background: var(--bg-card); border-radius: 50%; }
+        .chart-content { position: relative; z-index: 1; display: flex; flex-direction: column; }
+        .chart-score { font-size: 3rem; font-weight: 800; color: var(--text-heading); line-height: 1; }
+        .chart-total { font-size: 1rem; color: var(--text-muted); font-weight: 600; }
+
+        /* --- About Section Profile --- */
+        .profile-card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 50px; box-shadow: var(--shadow-md); display: grid; grid-template-columns: 250px 1fr; gap: 40px; align-items: center; }
+        .profile-img-placeholder { width: 100%; aspect-ratio: 1; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 6rem; color: var(--primary); box-shadow: 0 10px 25px rgba(15, 118, 110, 0.2); border: 8px solid white; }
+        .profile-content h3 { font-size: 2.5rem; color: var(--text-heading); margin-bottom: 5px; line-height: 1.1; }
+        .profile-content h4 { font-size: 1.2rem; color: var(--accent); margin-bottom: 20px; font-weight: 600; }
+        .mission-quote { font-style: italic; font-size: 1.1rem; color: var(--primary-dark); padding-left: 20px; border-left: 4px solid var(--accent); margin: 25px 0; background: var(--primary-light); padding: 15px 20px; border-radius: 0 12px 12px 0; }
+
+        /* --- Footer --- */
+        footer { background: #0f172a; color: white; padding: 80px 0 20px; margin-top: 80px; }
+        .footer-grid { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 40px; margin-bottom: 20px; }
+        .footer-brand h2 { color: white; font-weight: 800; margin-bottom: 8px; }
+        .footer-brand h2 span { color: var(--primary-light); }
+        .footer-brand p { color: var(--text-muted); margin-bottom: 20px; }
+        .social-icons { display: flex; gap: 16px; }
+        .social-icons a { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; color: white; transition: 0.3s; text-decoration: none; }
+        .social-icons a:hover { background: var(--primary); transform: translateY(-3px); }
+        .footer-links h4 { font-size: 1.1rem; margin-bottom: 20px; color: white; }
+        .footer-
