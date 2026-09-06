@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="te">
 <head>
@@ -35,11 +35,6 @@
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
         }
-        
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-        }
     </style>
 </head>
 <body class="text-gray-800 antialiased">
@@ -61,7 +56,7 @@
         </div>
     </nav>
 
-    <!-- Admin Authentication Modal (Hidden by default) -->
+    <!-- Admin Authentication Modal -->
     <div id="auth-modal" class="fixed inset-0 bg-gray-900 bg-opacity-70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-sm w-full transform transition-all animate-[fadeIn_0.2s_ease-out]">
             <div class="text-center mb-6">
@@ -69,30 +64,34 @@
                     <i class="fas fa-shield-alt"></i>
                 </div>
                 <h3 class="text-xl font-bold text-gray-900">Admin Secure Login</h3>
-                <p class="text-sm text-gray-500 mt-2">మీరు మాత్రమే యాక్సెస్ చేయడానికి అడ్మిన్ Email మరియు పాస్‌వర్డ్ ఎంటర్ చేయండి</p>
+                <p class="text-sm text-gray-500 mt-2">మీరు మాత్రమే యాక్సెస్ చేయడానికి పాస్‌వర్డ్ ఎంటర్ చేయండి</p>
             </div>
-            <input type="email" id="admin-email" placeholder="Admin Email ID" class="w-full text-center text-lg border-2 border-gray-300 rounded-lg p-3 focus:ring-4 focus:ring-blue-200 focus:border-blue-500 outline-none mb-3 transition-all">
-            <input type="password" id="admin-password" placeholder="Password (Min 6 chars)" class="w-full text-center text-lg border-2 border-gray-300 rounded-lg p-3 focus:ring-4 focus:ring-blue-200 focus:border-blue-500 outline-none mb-4 transition-all">
+            <input type="password" id="admin-password" placeholder="Password ఎంటర్ చేయండి" class="w-full text-center text-lg border-2 border-gray-300 rounded-lg p-3 focus:ring-4 focus:ring-blue-200 focus:border-blue-500 outline-none mb-4 transition-all">
             <div class="flex gap-3">
                 <button onclick="closeAdminAuth()" class="flex-1 bg-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-300 transition">Cancel</button>
                 <button id="login-btn" onclick="verifyAdminLogin()" class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-md">Login</button>
             </div>
-            <p id="pwd-error" class="text-red-500 text-sm font-semibold text-center mt-3 hidden">తప్పు వివరాలు. మళ్లీ ప్రయత్నించండి.</p>
+            <p id="pwd-error" class="text-red-500 text-sm font-semibold text-center mt-3 hidden">పాస్‌వర్డ్ తప్పు. మళ్లీ ప్రయత్నించండి.</p>
         </div>
     </div>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        <!-- TEACHER PORTAL -->
+        <!-- TEACHER PORTAL (ADMIN) -->
         <section id="teacher-portal" class="hidden portal-transition">
             <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-xl shadow-sm border border-blue-200 gap-4">
                 <div>
                     <h2 class="text-2xl font-bold text-gray-900"><i class="fas fa-user-shield text-blue-600 mr-2"></i>Admin Dashboard (Secure)</h2>
-                    <p class="text-gray-600 mt-1">కొత్త ఫోల్డర్లు సృష్టించండి, వీడియోలు/క్విజ్‌లు యాడ్ చేయండి మరియు నిర్వహించండి.</p>
+                    <p class="text-gray-600 mt-1">కొత్త ఫోల్డర్లు సృష్టించండి, వీడియోలు/క్విజ్‌లు యాడ్ చేయండి మరియు నిర్వహించండి. (డేటా ఆటోమేటిక్‌గా క్లౌడ్‌లో సేవ్ అవుతుంది)</p>
                 </div>
-                <button onclick="switchPortal('student')" class="bg-red-100 text-red-700 px-4 py-2 rounded-lg font-semibold hover:bg-red-200 transition text-sm">
-                    <i class="fas fa-sign-out-alt mr-1"></i> Logout / Exit Admin
-                </button>
+                <div class="flex gap-3">
+                    <span id="cloud-status" class="bg-yellow-100 text-yellow-800 px-3 py-2 rounded-lg text-sm font-semibold flex items-center">
+                        <i class="fas fa-sync fa-spin mr-2"></i> కనెక్ట్ అవుతోంది...
+                    </span>
+                    <button onclick="switchPortal('student')" class="bg-red-100 text-red-700 px-4 py-2 rounded-lg font-semibold hover:bg-red-200 transition text-sm">
+                        <i class="fas fa-sign-out-alt mr-1"></i> Logout / Exit
+                    </button>
+                </div>
             </div>
 
             <!-- Controls Grid -->
@@ -176,10 +175,10 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1">సరైన సమాధానం</label>
                             <select id="quiz-answer" required class="w-full border border-gray-300 rounded-lg p-2.5 bg-green-50 text-green-800 font-bold outline-none focus:ring-2 focus:ring-green-500">
-                                <option value="0">Option 1</option>
-                                <option value="1">Option 2</option>
-                                <option value="2">Option 3</option>
-                                <option value="3">Option 4</option>
+                                <option value="0">Option 1 (మొదటిది)</option>
+                                <option value="1">Option 2 (రెండవది)</option>
+                                <option value="2">Option 3 (మూడవది)</option>
+                                <option value="3">Option 4 (నాల్గవది)</option>
                             </select>
                         </div>
                         <button type="submit" class="w-full bg-purple-600 text-white font-bold py-2.5 rounded-lg hover:bg-purple-700 transition shadow-sm">
@@ -207,12 +206,9 @@
         <!-- STUDENT PORTAL -->
         <section id="student-portal" class="portal-transition">
             
-            <!-- Folder Selection View (Default) -->
+            <!-- Folder Selection View -->
             <div id="student-home-view">
-                
-                <!-- Colorful Hero Section with Photo -->
                 <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl p-8 sm:p-12 mb-10 text-center shadow-2xl relative overflow-hidden">
-                    <!-- Decorative background elements -->
                     <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
                         <i class="fas fa-dna absolute top-10 left-10 text-6xl transform -rotate-45"></i>
                         <i class="fas fa-microscope absolute bottom-4 right-10 text-7xl transform rotate-12"></i>
@@ -220,9 +216,7 @@
                     </div>
                     
                     <div class="relative z-10 flex flex-col items-center">
-                        <!-- Profile Photo Frame -->
                         <div class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white shadow-xl mb-5 overflow-hidden bg-white flex items-center justify-center transform hover:scale-105 transition-transform duration-300">
-                            <!-- మీ అసలు ఫోటో లింక్‌ను ఇక్కడ "src=" పక్కన పేస్ట్ చేయాలి -->
                             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Teacher&backgroundColor=b6e3f4" alt="Teacher Profile" class="w-full h-full object-cover">
                         </div>
                         
@@ -236,12 +230,18 @@
                     </div>
                 </div>
 
+                <div class="flex justify-center mb-6">
+                     <span id="student-cloud-status" class="bg-gray-100 text-gray-600 px-4 py-2 rounded-full text-sm font-medium flex items-center">
+                        <i class="fas fa-sync fa-spin mr-2 text-blue-500"></i> లైవ్ కంటెంట్ లోడ్ అవుతోంది...
+                    </span>
+                </div>
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="student-folders-grid">
                     <!-- Folders Populated by JS -->
                 </div>
             </div>
 
-            <!-- Inside Folder View (Hidden by default) -->
+            <!-- Inside Folder View -->
             <div id="student-folder-content" class="hidden">
                 <button onclick="backToFolders()" class="mb-6 flex items-center text-blue-600 font-bold hover:text-blue-800 transition">
                     <i class="fas fa-arrow-left mr-2"></i> వెనక్కి వెళ్ళండి (Back to Folders)
@@ -257,22 +257,20 @@
                     </button>
                 </div>
 
-                <!-- Video List Container -->
                 <div id="student-videos-container" class="space-y-8">
                     <!-- Populated by JS -->
                 </div>
                 
-                <!-- No Content Message -->
                 <div id="no-content-msg" class="hidden text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">
                     <div class="bg-gray-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-folder-open text-4xl text-gray-300"></i>
                     </div>
                     <h4 class="text-xl font-bold text-gray-700 mb-2">కంటెంట్ అందుబాటులో లేదు</h4>
-                    <p class="text-gray-500 max-w-md mx-auto">ఈ ఫోల్డర్‌లో ఇంకా ఎలాంటి వీడియోలు అప్‌లోడ్ చేయబడలేదు. దయచేసి ఉపాధ్యాయులు అప్‌లోడ్ చేసే వరకు వేచి ఉండండి.</p>
+                    <p class="text-gray-500 max-w-md mx-auto">ఈ ఫోల్డర్‌లో ఇంకా ఎలాంటి వీడియోలు అప్‌లోడ్ చేయబడలేదు.</p>
                 </div>
             </div>
 
-            <!-- Interactive Quiz Modal overlay -->
+            <!-- Quiz Modal -->
             <div id="quiz-modal" class="fixed inset-0 bg-gray-900 bg-opacity-80 z-[60] hidden flex items-center justify-center p-4 backdrop-blur-md">
                 <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-[fadeIn_0.3s_ease-out]">
                     <div class="bg-indigo-600 text-white px-6 py-4 flex justify-between items-center shadow-md z-10">
@@ -285,7 +283,7 @@
                         </button>
                     </div>
                     <div class="p-0 overflow-y-auto flex-grow bg-gray-50" id="quiz-modal-body">
-                        <!-- Quiz content injected here -->
+                        <!-- Quiz content -->
                     </div>
                 </div>
             </div>
@@ -296,4 +294,6 @@
     <!-- Hidden Footer Lock for Admin Access -->
     <footer class="text-center py-8 text-gray-400 text-sm mt-4">
         <p>&copy; 2026 Digital Biology Hub. All Rights Reserved. 
-            <button onclick="openAdminAuth()" class="text-gray-200 hover:text-gray-500 ml-3 focu
+            <button onclick="openAdminAuth()" class="text-gray-200 hover:text-gray-500 ml-3 focus:outline-none transition-colors" title="Admin Access">
+                <i class="fas fa-lock text-xs"></i>
+       
